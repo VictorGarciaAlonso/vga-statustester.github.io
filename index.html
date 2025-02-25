@@ -1,4 +1,3 @@
-html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,24 +5,37 @@ html
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Status Page</title>
     <script>
-        function updateStatus() {
-            // Get the current time in milliseconds
-            const now = new Date();
-            // Calculate the number of 5-minute intervals since the Unix epoch
-            const interval = Math.floor(now.getTime() / (5 * 60 * 1000));
-            // Determine status based on whether the interval is odd or even
-            const status = (interval % 2 === 0) ? "ok" : "fail";
-            // Update the content
-            document.getElementById('status').textContent = `{"status": "${status}"}`;
+        function getStatus() {
+            // Generate a random status (ok or fail)
+            const status = Math.random() < 0.5 ? "ok" : "fail";
+            return { status };
         }
 
-        // Update status immediately upon loading
-        window.onload = updateStatus;
-        // Update status every minute
-        setInterval(updateStatus, 60000);
+        function sendResponse() {
+            const status = getStatus();
+            const response = JSON.stringify(status, null, 2);
+
+            // Check if the request is from curl (based on the User-Agent header)
+            const userAgent = navigator.userAgent.toLowerCase();
+            if (userAgent.includes('curl')) {
+                // If the request is from curl, return the JSON response and exit
+                document.write(`<pre>${response}</pre>`);
+                return;
+            }
+
+            // If it's a browser, display the status on the page
+            document.getElementById('status').textContent = response;
+        }
+
+        // Update the status every 5 minutes (300,000 milliseconds)
+        setInterval(sendResponse, 300000);
+
+        // Initial call to display the status immediately
+        window.onload = sendResponse;
     </script>
 </head>
 <body>
-    <pre id="status"></pre>
+    <h1>Status Page</h1>
+    <pre id="status">Loading...</pre>
 </body>
 </html>
