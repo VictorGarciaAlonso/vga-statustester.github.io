@@ -1,0 +1,29 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Page</title>
+    <script>
+        function updateStatus() {
+            // Get the current time in milliseconds
+            const now = new Date();
+            // Calculate the number of 5-minute intervals since the Unix epoch
+            const interval = Math.floor(now.getTime() / (5 * 60 * 1000));
+            // Determine status based on whether the interval is odd or even
+            const status = (interval % 2 === 0) ? "ok" : "fail";
+            // Update the content
+            document.getElementById('status').textContent = `{"status": "${status}"}`;
+        }
+
+        // Update status immediately upon loading
+        window.onload = updateStatus;
+        // Update status every minute
+        setInterval(updateStatus, 60000);
+    </script>
+</head>
+<body>
+    <pre id="status"></pre>
+</body>
+</html>
