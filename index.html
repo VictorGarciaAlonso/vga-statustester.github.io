@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,8 +6,12 @@
     <title>Status Page</title>
     <script>
         function getStatus() {
-            // Generate a random status (ok or fail)
-            const status = Math.random() < 0.5 ? "ok" : "fail";
+            // Get the current time in milliseconds
+            const now = Date.now();
+            // Calculate the number of 5-minute intervals since the epoch
+            const interval = Math.floor(now / (5 * 60 * 1000));
+            // Toggle status based on whether the interval is even or odd
+            const status = interval % 2 === 0 ? "ok" : "fail";
             return { status };
         }
 
